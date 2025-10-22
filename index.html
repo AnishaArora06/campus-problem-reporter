@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Problem Reporter - Report Campus Issues Efficiently</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Campus Problem Reporter</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="student.html" class="nav-link">Report Problem</a></li>
+                <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
+                <li><a href="#team" class="nav-link">Team</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><button id="theme-toggle" class="theme-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Campus Problem Reporter</h1>
+            <p class="hero-description">A platform for students to report and resolve campus issues efficiently.</p>
+            <div class="hero-buttons">
+                <a href="student.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Report a Problem
+                </a>
+                <a href="admin.html" class="btn btn-secondary">
+                    <i class="fas fa-chart-dashboard"></i>
+                    View Dashboard
+                </a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number" data-target="1200">0</span>
+                <span class="stat-label">Problems Reported</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="900">0</span>
+                <span class="stat-label">Resolved</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="300">0</span>
+                <span class="stat-label">Pending</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Problems -->
+    <section class="featured-problems">
+        <div class="container">
+            <h2 class="section-title">Recent Problems</h2>
+            <div class="problems-grid">
+                <div class="problem-card" data-status="pending">
+                    <div class="card-image">
+                        <img src="images/broken-chair.jpg" alt="Broken Chairs" onerror="this.src='https://via.placeholder.com/300x200?text=Broken+Chairs'">
+                        <div class="status-badge status-pending">Pending</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Broken Chairs in Library</h3>
+                            <span class="category-tag category-furniture">Furniture</span>
+                        </div>
+                        <p class="card-description">Multiple chairs in the main library reading hall are damaged and need immediate replacement for student comfort.</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-calendar"></i> 2 days ago</span>
+                            <span><i class="fas fa-user"></i> Anonymous</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-card" data-status="resolved">
+                    <div class="card-image">
+                        <img src="images/water-leaking.jpg" alt="Water Tap" onerror="this.src='https://via.placeholder.com/300x200?text=Water+Tap'">
+                        <div class="status-badge status-resolved">Resolved</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Leaking Water Tap in Canteen</h3>
+                            <span class="category-tag category-infrastructure">Infrastructure</span>
+                        </div>
+                        <p class="card-description">Water tap near the canteen entrance was continuously leaking, causing water wastage and slippery floors.</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-calendar"></i> 1 week ago</span>
+                            <span><i class="fas fa-user"></i> Rajesh Kumar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="problem-card" data-status="in-progress">
+                    <div class="card-image">
+                        <img src="images/projector.jpg" alt="Projector" onerror="this.src='https://via.placeholder.com/300x200?text=Projector'">
+                        <div class="status-badge status-in-progress">In Progress</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>Projector Not Working in Classroom 204</h3>
+                            <span class="category-tag category-electronics">Electronics</span>
+                        </div>
+                        <p class="card-description">The projector in classroom 204 is not displaying properly, affecting lecture presentations and student learning.</p>
+                        <div class="card-meta">
+                            <span><i class="fas fa-calendar"></i> 5 days ago</span>
+                            <span><i class="fas fa-user"></i> Priya Singh</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team">
+        <div class="container">
+            <h2 class="section-title">Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="images/anisha.jpg" alt="Anisha Arora" onerror="this.src='https://via.placeholder.com/200x200?text=AA'">
+                    </div>
+                    <h3>Anisha Arora</h3>
+                    <p>Core Team Member</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="images/anushka-s.jpg" alt="Anushka Srivastav" onerror="this.src='https://via.placeholder.com/200x200?text=AS'">
+                    </div>
+                    <h3>Anushka Srivastav</h3>
+                    <p>Core Team Member</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="images/anushka-b.jpg" alt="Anushka Bhatnagar" onerror="this.src='https://via.placeholder.com/200x200?text=AB'">
+                    </div>
+                    <h3>Anushka Bhatnagar</h3>
+                    <p>Core Team Member</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>123, Tech Park, 5th Floor<br>Sector 45, Gurugram<br>Haryana - 122003, India</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>support@campusproblemreporter.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="contactName" required>
+                            <label for="contactName">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="contactEmail" required>
+                            <label for="contactEmail">Your Email</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="contactMessage" required></textarea>
+                            <label for="contactMessage">Your Message</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="map-placeholder">
+                <div class="map-content">
+                    <i class="fas fa-map"></i>
+                    <p>Interactive Map Coming Soon</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Campus Problem Reporter</h3>
+                    <p>Making campus life better, one problem at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="student.html">Report Problem</a></li>
+                        <li><a href="admin.html">Admin Dashboard</a></li>
+                        <li><a href="#team">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> support@campusproblemreporter.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Campus Problem Reporter. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <a href="student.html" class="fab-button" title="Quick Report">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
