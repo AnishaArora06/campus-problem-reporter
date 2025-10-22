@@ -14,8 +14,13 @@ app.use(morgan('dev'));
 
 // Ensure uploads directory exists and serve static files
 const uploadsDir = path.join(__dirname, 'uploads');
-fs.mkdirSync(uploadsDir, { recursive: true });
-app.use('/uploads', express.static(uploadsDir));
+// Disable uploads directory creation on Vercel (read-only file system)
+if (process.env.VERCEL !== '1') {
+  const uploadsDir = path.join(__dirname, 'uploads');
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  app.use('/uploads', express.static(uploadsDir));
+}
+
 
 // Routes
 app.use('/api/students', require('./src/routes/student'));
