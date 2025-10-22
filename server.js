@@ -13,13 +13,15 @@ app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
 // Ensure uploads directory exists and serve static files
-const uploadsDir = path.join(__dirname, 'uploads');
-// Disable uploads directory creation on Vercel (read-only file system)
+// Ensure uploads directory exists and serve static files (only locally)
 if (process.env.VERCEL !== '1') {
   const uploadsDir = path.join(__dirname, 'uploads');
   fs.mkdirSync(uploadsDir, { recursive: true });
   app.use('/uploads', express.static(uploadsDir));
+} else {
+  console.log('Running on Vercel - skipping uploads directory creation');
 }
+
 
 
 // Routes
