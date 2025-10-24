@@ -1,16 +1,15 @@
 {
   "name": "campus-problem-reporter",
   "version": "1.0.0",
-  "description": "Campus Problem Reporter - Next.js + Express + MongoDB",
+  "description": "Campus Problem Reporter - Express + MongoDB",
   "main": "server.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start -p ${PORT:-3000}",
-    "dev:express": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'No build step needed for Express app'"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anisha Arora",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -19,10 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.0",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "next": "^14.2.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
