@@ -12,6 +12,9 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
+// ✅ Serve frontend static files (like index.html, css, js, images)
+app.use(express.static(path.join(__dirname)));
+
 // Ensure uploads directory exists and serve static files
 const uploadsDir = path.join(__dirname, 'uploads');
 fs.mkdirSync(uploadsDir, { recursive: true });
@@ -29,16 +32,25 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', db: dbState });
 });
 
+// ✅ Serve index.html as the homepage (this fixes your Render issue)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 const PORT = process.env.PORT || 5000;
 
 // Start server after DB connects
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`🌍 Homepage: http://localhost:${PORT}`);
+      console.log(`👩‍🎓 Student: http://localhost:${PORT}/student.html`);
+      console.log(`🧑‍💻 Admin: http://localhost:${PORT}/admin.html`);
+      console.log(`💚 Health: http://localhost:${PORT}/health`);
     });
   })
   .catch((err) => {
-    console.error('Failed to connect to MongoDB:', err.message);
+    console.error('❌ Failed to connect to MongoDB:', err.message);
     process.exit(1);
   });
