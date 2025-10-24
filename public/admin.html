@@ -1,23 +1,413 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Portal • Campus Problem Reporter</title>
-  <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh;align-items:center;justify-content:center}
-    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:32px 28px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:680px;margin:24px}
-    h1{margin:0 0 10px;font-size:28px}
-    p{margin:0 0 18px;color:#93c5fd}
-    a{display:inline-block;margin-top:8px;color:#60a5fa;text-decoration:none}
-    a:hover{text-decoration:underline}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Campus Problem Reporter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="card">
-    <h1>Admin Portal</h1>
-    <p>Manage and update reported problems. (Static placeholder)</p>
-    <a href="/">← Back to Home</a>
-  </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Campus Problem Reporter</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="student.html" class="nav-link">Report Problem</a></li>
+                <li><a href="admin.html" class="nav-link active">Admin Dashboard</a></li>
+                <li><a href="index.html#team" class="nav-link">Team</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><button id="theme-toggle" class="theme-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <div class="dashboard-actions">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                    <button class="btn btn-primary" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>1,247</h3>
+                        <p>Total Problems</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>312</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>89</h3>
+                        <p>In Progress</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>846</h3>
+                        <p>Resolved</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Panel -->
+            <div class="notifications-panel">
+                <h2><i class="fas fa-bell"></i> Recent Notifications</h2>
+                <div class="notifications-list">
+                    <div class="notification-item unread">
+                        <div class="notification-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>New Problem Reported</h4>
+                            <p>Air conditioner not working in Classroom 105 - Electronics Department</p>
+                            <span class="notification-time">5 minutes ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-small btn-primary">View</button>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Problem Status Updated</h4>
+                            <p>Water tap leakage marked as resolved by Maintenance Team</p>
+                            <span class="notification-time">2 hours ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-small btn-secondary">Dismiss</button>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>High Priority Report</h4>
+                            <p>Fire extinguisher missing in Block A - Critical priority</p>
+                            <span class="notification-time">4 hours ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-small btn-primary">Urgent</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-container">
+                <h2>Problem Management</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="departmentFilter">Department:</label>
+                        <select id="departmentFilter">
+                            <option value="all">All Departments</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Mechanical">Mechanical</option>
+                            <option value="Civil">Civil</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Chemical">Chemical</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category:</label>
+                        <select id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Cleanliness">Cleanliness</option>
+                            <option value="Security">Security</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="priorityFilter">Priority:</label>
+                        <select id="priorityFilter">
+                            <option value="all">All Priorities</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" id="clearFilters">
+                        <i class="fas fa-times"></i>
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Problems Table -->
+            <div class="problems-table-container">
+                <div class="table-header">
+                    <h3>Reported Problems</h3>
+                    <div class="table-controls">
+                        <input type="text" id="searchInput" placeholder="Search problems..." class="search-input">
+                        <button class="btn btn-sm btn-secondary" id="viewToggle">
+                            <i class="fas fa-th-large"></i>
+                            Grid View
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="problems-table" id="problemsTable">
+                    <div class="problem-row" data-id="1" data-status="pending" data-category="furniture" data-department="Computer Science" data-priority="high">
+                        <div class="problem-thumbnail">
+                            <img src="images/broken-chair.jpg" alt="Problem" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                        </div>
+                        <div class="problem-info">
+                            <h4>Broken Chairs in Library</h4>
+                            <p><strong>Reported by:</strong> Anisha Arora (CS2021001)</p>
+                            <p><strong>Location:</strong> Main Library</p>
+                            <p><strong>Department:</strong> Computer Science</p>
+                            <p class="problem-description">Multiple chairs in the main library reading hall are broken and uncomfortable for students.</p>
+                        </div>
+                        <div class="problem-meta">
+                            <span class="category-tag category-furniture">Furniture</span>
+                            <span class="priority-badge priority-high">High</span>
+                            <span class="status-badge status-pending">Pending</span>
+                            <p class="report-date">Reported: 2 days ago</p>
+                        </div>
+                        <div class="problem-actions">
+                            <select class="status-select" data-problem-id="1">
+                                <option value="pending" selected>Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary view-details" data-problem-id="1">
+                                <i class="fas fa-eye"></i>
+                                View
+                            </button>
+                            <button class="btn btn-sm btn-secondary edit-problem" data-problem-id="1">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="problem-row" data-id="2" data-status="resolved" data-category="infrastructure" data-department="General" data-priority="medium">
+                        <div class="problem-thumbnail">
+                            <img src="images/water-leaking.jpg" alt="Problem" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                        </div>
+                        <div class="problem-info">
+                            <h4>Leaking Water Tap in Canteen</h4>
+                            <p><strong>Reported by:</strong> Rahul Kumar (ME2020045)</p>
+                            <p><strong>Location:</strong> Main Canteen</p>
+                            <p><strong>Department:</strong> Mechanical</p>
+                            <p class="problem-description">Water tap near the canteen entrance is continuously leaking, causing water wastage.</p>
+                        </div>
+                        <div class="problem-meta">
+                            <span class="category-tag category-infrastructure">Infrastructure</span>
+                            <span class="priority-badge priority-medium">Medium</span>
+                            <span class="status-badge status-resolved">Resolved</span>
+                            <p class="report-date">Reported: 1 week ago</p>
+                        </div>
+                        <div class="problem-actions">
+                            <select class="status-select" data-problem-id="2">
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved" selected>Resolved</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary view-details" data-problem-id="2">
+                                <i class="fas fa-eye"></i>
+                                View
+                            </button>
+                            <button class="btn btn-sm btn-secondary edit-problem" data-problem-id="2">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="problem-row" data-id="3" data-status="in-progress" data-category="electronics" data-department="Electronics" data-priority="critical">
+                        <div class="problem-thumbnail">
+                            <img src="images/projector.jpg" alt="Problem" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                        </div>
+                        <div class="problem-info">
+                            <h4>Projector Not Working in Classroom 204</h4>
+                            <p><strong>Reported by:</strong> Priya Singh (EC2021078)</p>
+                            <p><strong>Location:</strong> Classroom 204</p>
+                            <p><strong>Department:</strong> Electronics</p>
+                            <p class="problem-description">The projector is not displaying properly, affecting lecture presentations.</p>
+                        </div>
+                        <div class="problem-meta">
+                            <span class="category-tag category-electronics">Electronics</span>
+                            <span class="priority-badge priority-critical">Critical</span>
+                            <span class="status-badge status-in-progress">In Progress</span>
+                            <p class="report-date">Reported: 5 days ago</p>
+                        </div>
+                        <div class="problem-actions">
+                            <select class="status-select" data-problem-id="3">
+                                <option value="pending">Pending</option>
+                                <option value="in-progress" selected>In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary view-details" data-problem-id="3">
+                                <i class="fas fa-eye"></i>
+                                View
+                            </button>
+                            <button class="btn btn-sm btn-secondary edit-problem" data-problem-id="3">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="problem-row" data-id="4" data-status="pending" data-category="cleanliness" data-department="General" data-priority="medium">
+                        <div class="problem-thumbnail">
+                            <img src="images/washroom.jpg" alt="Problem">
+                        </div>
+                        <div class="problem-info">
+                            <h4>Washroom Cleanliness Issues</h4>
+                            <p><strong>Reported by:</strong> Anonymous</p>
+                            <p><strong>Location:</strong> Block B, 2nd Floor</p>
+                            <p><strong>Department:</strong> General</p>
+                            <p class="problem-description">Poor maintenance and cleanliness in the washroom facilities.</p>
+                        </div>
+                        <div class="problem-meta">
+                            <span class="category-tag category-cleanliness">Cleanliness</span>
+                            <span class="priority-badge priority-medium">Medium</span>
+                            <span class="status-badge status-pending">Pending</span>
+                            <p class="report-date">Reported: 3 days ago</p>
+                        </div>
+                        <div class="problem-actions">
+                            <select class="status-select" data-problem-id="4">
+                                <option value="pending" selected>Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary view-details" data-problem-id="4">
+                                <i class="fas fa-eye"></i>
+                                View
+                            </button>
+                            <button class="btn btn-sm btn-secondary edit-problem" data-problem-id="4">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Details Modal -->
+            <div class="modal" id="problemModal">
+                <div class="modal-content large">
+                    <div class="modal-header">
+                        <h2 id="modalTitle">Problem Details</h2>
+                        <button class="modal-close" onclick="closeProblemModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="problem-details" id="problemDetails">
+                            <!-- Details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Campus Problem Reporter</h3>
+                    <p>Making campus life better, one problem at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="student.html">Report Problem</a></li>
+                        <li><a href="admin.html">Admin Dashboard</a></li>
+                        <li><a href="index.html#team">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="index.html#contact">Contact Us</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> support@campusproblemreporter.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Campus Problem Reporter. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <a href="student.html" class="fab-button" title="Report Problem">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <script src="js/script.js"></script>
 </body>
 </html>

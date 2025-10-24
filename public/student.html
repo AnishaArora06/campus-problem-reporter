@@ -1,23 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Portal • Campus Problem Reporter</title>
-  <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh;align-items:center;justify-content:center}
-    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:32px 28px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:680px;margin:24px}
-    h1{margin:0 0 10px;font-size:28px}
-    p{margin:0 0 18px;color:#93c5fd}
-    a{display:inline-block;margin-top:8px;color:#60a5fa;text-decoration:none}
-    a:hover{text-decoration:underline}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Problem - Campus Problem Reporter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="card">
-    <h1>Student Portal</h1>
-    <p>Use this page to submit problems and track status. (Static placeholder)</p>
-    <a href="/">← Back to Home</a>
-  </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Campus Problem Reporter</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="student.html" class="nav-link active">Report Problem</a></li>
+                <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
+                <li><a href="index.html#team" class="nav-link">Team</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><button id="theme-toggle" class="theme-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Report a Problem</h1>
+                <p>Help us improve campus facilities by reporting issues you encounter</p>
+            </div>
+
+            <div class="form-container">
+                <form class="problem-form" id="problemForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="studentName" name="studentName" required>
+                            <label for="studentName">Full Name</label>
+                            <i class="fas fa-user form-icon"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="rollNumber" name="rollNumber" required>
+                            <label for="rollNumber">Roll Number</label>
+                            <i class="fas fa-id-card form-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <select id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Civil">Civil</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Chemical">Chemical</option>
+                                <option value="Biotechnology">Biotechnology</option>
+                                <option value="MBA">MBA</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <label for="department">Department</label>
+                            <i class="fas fa-graduation-cap form-icon"></i>
+                        </div>
+                        <div class="form-group">
+                            <select id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Cleanliness">Cleanliness</option>
+                                <option value="Security">Security</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <label for="category">Problem Category</label>
+                            <i class="fas fa-tags form-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="location" name="location" required>
+                        <label for="location">Location (e.g., Library, Classroom 204, Canteen)</label>
+                        <i class="fas fa-map-marker-alt form-icon"></i>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea id="problemDescription" name="problemDescription" required rows="5"></textarea>
+                        <label for="problemDescription">Problem Description</label>
+                        <i class="fas fa-comment-alt form-icon"></i>
+                    </div>
+
+                    <div class="form-group">
+                        <select id="priority" name="priority" required>
+                            <option value="">Select Priority</option>
+                            <option value="Low">Low - Can wait</option>
+                            <option value="Medium">Medium - Should be addressed soon</option>
+                            <option value="High">High - Needs immediate attention</option>
+                            <option value="Critical">Critical - Emergency</option>
+                        </select>
+                        <label for="priority">Priority Level</label>
+                        <i class="fas fa-exclamation-triangle form-icon"></i>
+                    </div>
+
+                    <div class="form-group file-upload-group">
+                        <input type="file" id="imageUpload" name="imageUpload" accept="image/*" multiple>
+                        <label for="imageUpload" class="file-upload-label">
+                            <i class="fas fa-camera"></i>
+                            <span>Upload Images (Optional)</span>
+                            <small>You can upload multiple images</small>
+                        </label>
+                        <div class="file-preview" id="filePreview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i>
+                            Reset Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success Modal -->
+            <div class="modal" id="successModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Report Submitted Successfully!</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>Thank you for reporting this issue. Your report has been received and will be reviewed by our team.</p>
+                        <div class="report-details">
+                            <p><strong>Report ID:</strong> <span id="reportId"></span></p>
+                            <p><strong>Status:</strong> <span class="status-badge status-pending">Pending Review</span></p>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="closeModal()">
+                            <i class="fas fa-check"></i>
+                            Got it
+                        </button>
+                        <button class="btn btn-secondary" onclick="submitAnother()">
+                            <i class="fas fa-plus"></i>
+                            Submit Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Problems Section -->
+            <section class="recent-problems">
+                <h2>Recently Reported Problems</h2>
+                <div class="problems-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Campus Problem Reporter</h3>
+                    <p>Making campus life better, one problem at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="student.html">Report Problem</a></li>
+                        <li><a href="admin.html">Admin Dashboard</a></li>
+                        <li><a href="index.html#team">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="index.html#contact">Contact Us</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> support@campusproblemreporter.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Campus Problem Reporter. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <a href="#problemForm" class="fab-button" title="Go to Form">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
