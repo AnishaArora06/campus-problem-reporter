@@ -2308,3 +2308,68 @@ input[type="file"] {
     align-items: center;
     gap: var(--spacing-1);
 }
+.member-photo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 15px;
+  position: relative;
+}
+.member-photo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.file-preview {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.preview-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+/* 🌙 DARK MODE STYLES */
+[data-theme="dark"] {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .navbar {
+  background-color: #222;
+  color: #fff;
+}
+
+[data-theme="dark"] .nav-link {
+  color: #ddd;
+}
+
+[data-theme="dark"] .nav-link.active {
+  color: #ff9800;
+}
+
+[data-theme="dark"] .btn-primary {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: #555;
+  color: #fff;
+}
+
+[data-theme="dark"] .footer {
+  background-color: #111;
+  color: #ccc;
+}
+
+[data-theme="dark"] .section-title {
+  color: #ffcc80;
+}
+

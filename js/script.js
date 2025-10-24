@@ -1654,3 +1654,63 @@ const notificationStyles = `
 const styleSheet = document.createElement('style');
 styleSheet.textContent = notificationStyles;
 document.head.appendChild(styleSheet);
+// Generate initials if image not found
+document.querySelectorAll('.member-photo').forEach(photo => {
+  const img = photo.querySelector('img');
+  const name = photo.getAttribute('data-name');
+
+  // If image fails or doesn't exist, create initials
+  img.addEventListener('error', () => {
+    const initials = name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('');
+
+    // Create initials circle
+    const initialsDiv = document.createElement('div');
+    initialsDiv.textContent = initials;
+    initialsDiv.style.width = '120px';
+    initialsDiv.style.height = '120px';
+    initialsDiv.style.borderRadius = '50%';
+    initialsDiv.style.display = 'flex';
+    initialsDiv.style.alignItems = 'center';
+    initialsDiv.style.justifyContent = 'center';
+    initialsDiv.style.background = 'linear-gradient(135deg, #007bff, #ff6b6b)';
+    initialsDiv.style.color = 'white';
+    initialsDiv.style.fontSize = '32px';
+    initialsDiv.style.fontWeight = 'bold';
+    initialsDiv.style.margin = '0 auto';
+    initialsDiv.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+
+    // Replace image with initials
+    photo.appendChild(initialsDiv);
+  });
+});
+// 🌙 DARK MODE TOGGLE FUNCTIONALITY
+const themeToggle = document.getElementById("theme-toggle");
+const htmlTag = document.documentElement;
+
+// Load saved theme from localStorage
+if (localStorage.getItem("theme") === "dark") {
+  htmlTag.setAttribute("data-theme", "dark");
+  themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+} else {
+  htmlTag.setAttribute("data-theme", "light");
+  themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+}
+
+// Add toggle event listener
+themeToggle.addEventListener("click", () => {
+  const currentTheme = htmlTag.getAttribute("data-theme");
+  const newTheme = currentTheme === "light" ? "dark" : "light";
+  
+  htmlTag.setAttribute("data-theme", newTheme);
+  localStorage.setItem("theme", newTheme);
+
+  if (newTheme === "dark") {
+    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+  } else {
+    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+  }
+});
+

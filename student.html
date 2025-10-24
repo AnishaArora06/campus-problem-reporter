@@ -220,5 +220,86 @@
     </a>
 
     <script src="js/script.js"></script>
+    <script>
+  // === IMAGE UPLOAD PREVIEW + VALIDATION ===
+  document.getElementById("imageUpload").addEventListener("change", function (event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById("filePreview");
+    previewContainer.innerHTML = "";
+
+    for (let file of files) {
+      // Check file type
+      if (!file.type.match("image.*")) {
+        alert("Only JPG, JPEG, or PNG images are allowed.");
+        continue;
+      }
+
+      // Check size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert(`${file.name} is too large. Max 2MB allowed.`);
+        continue;
+      }
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("preview-image");
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // === FORM SUBMISSION FUNCTIONALITY ===
+  document.getElementById("problemForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    const imageFiles = document.getElementById("imageUpload").files;
+    for (let file of imageFiles) {
+      formData.append("images", file);
+    }
+
+    try {
+      const response = await fetch("/api/problems/report", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Show success modal
+        document.getElementById("reportId").textContent = data.reportId || "Generated ID";
+        document.getElementById("successModal").style.display = "flex";
+        this.reset();
+        document.getElementById("filePreview").innerHTML = "";
+      } else {
+        alert("❌ Failed to submit problem. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Error connecting to server.");
+    }
+  });
+
+  // === MODAL CONTROL ===
+  function closeModal() {
+    document.getElementById("successModal").style.display = "none";
+  }
+
+  function submitAnother() {
+    document.getElementById("successModal").style.display = "none";
+    document.getElementById("problemForm").scrollIntoView({ behavior: "smooth" });
+  }
+
+  // Make closeModal & submitAnother accessible globally
+  window.closeModal = closeModal;
+  window.submitAnother = submitAnother;
+</script>
+<script src="js/script.js"></script>
+
 </body>
 </html>

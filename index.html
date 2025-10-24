@@ -128,33 +128,36 @@
 
     <!-- Team Section -->
     <section id="team" class="team">
-        <div class="container">
-            <h2 class="section-title">Our Team</h2>
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/anisha.jpg" alt="Anisha Arora" onerror="this.src='https://via.placeholder.com/200x200?text=AA'">
-                    </div>
-                    <h3>Anisha Arora</h3>
-                    <p>Core Team Member</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/anushka-s.jpg" alt="Anushka Srivastav" onerror="this.src='https://via.placeholder.com/200x200?text=AS'">
-                    </div>
-                    <h3>Anushka Srivastav</h3>
-                    <p>Core Team Member</p>
-                </div>
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="images/anushka-b.jpg" alt="Anushka Bhatnagar" onerror="this.src='https://via.placeholder.com/200x200?text=AB'">
-                    </div>
-                    <h3>Anushka Bhatnagar</h3>
-                    <p>Core Team Member</p>
-                </div>
-            </div>
+  <div class="container">
+    <h2 class="section-title">Our Team</h2>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="member-photo" data-name="Anisha Arora">
+          <img src="images/anisha.jpg" alt="Anisha Arora" onerror="this.style.display='none'">
         </div>
-    </section>
+        <h3>Anisha Arora</h3>
+        <p>Core Team Member</p>
+      </div>
+
+      <div class="team-member">
+        <div class="member-photo" data-name="Anushka Srivastav">
+          <img src="images/anushka-s.jpg" alt="Anushka Srivastav" onerror="this.style.display='none'">
+        </div>
+        <h3>Anushka Srivastav</h3>
+        <p>Core Team Member</p>
+      </div>
+
+      <div class="team-member">
+        <div class="member-photo" data-name="Anushka Bhatnagar">
+          <img src="images/anushka-b.jpg" alt="Anushka Bhatnagar" onerror="this.style.display='none'">
+        </div>
+        <h3>Anushka Bhatnagar</h3>
+        <p>Core Team Member</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
@@ -264,5 +267,31 @@
     </a>
 
     <script src="js/script.js"></script>
+    <script>
+  // Count-up animation for stats
+  document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll(".stat-number");
+    const speed = 80; // lower = faster animation
+
+    counters.forEach(counter => {
+      const target = +counter.getAttribute("data-target");
+      const updateCount = () => {
+        const value = +counter.innerText;
+        const increment = Math.ceil(target / speed);
+
+        if (value < target) {
+          counter.innerText = value + increment;
+          setTimeout(updateCount, 30);
+        } else {
+          counter.innerText = target;
+        }
+      };
+      updateCount();
+    });
+  });
+</script>
+<script src="js/script.js"></script>
+
+
 </body>
 </html>
