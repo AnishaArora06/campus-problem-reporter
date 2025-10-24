@@ -1,5 +1,5 @@
-import { connectDB } from '@/src/lib/db';
-import Problem from '@/src/models/ProblemPublic';
+import { connectDB } from "../../../lib/db";
+import Problem from "../../../models/ProblemPublic";
 
 export default async function handler(req, res) {
   try {

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const PublicProblemSchema = new mongoose.Schema(
+const ProblemSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true },
@@ -10,4 +10,4 @@ const PublicProblemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.PublicProblem || mongoose.model('PublicProblem', PublicProblemSchema);
+export default mongoose.models.Problem || mongoose.model('Problem', ProblemSchema);
