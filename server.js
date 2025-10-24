@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '.env.local' });
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -29,7 +29,7 @@ if (process.env.VERCEL !== '1') {
 // ----------------------------
 // Serve static frontend files (HTML, CSS, JS)
 // ----------------------------
-const publicPath = path.join(__dirname); // all HTML, CSS, JS are in root folder
+const publicPath = path.join(__dirname); // HTML files are in root
 app.use(express.static(publicPath));
 
 // ----------------------------
@@ -50,10 +50,10 @@ app.get('/admin', (req, res) => {
 // ----------------------------
 // API Routes
 // ----------------------------
-app.use('/api/students', require('./src/routes/student'));
+app.use('/api/student', require('./src/routes/student'));  // singular
 app.use('/api/admin', require('./src/routes/admin'));
-app.use('/api', require('./src/routes/public'));
 app.use('/api/problems', require('./src/routes/problems'));
+app.use('/api/public', require('./src/routes/public'));
 
 // ----------------------------
 // Health check route
@@ -76,6 +76,7 @@ connectDB()
       console.log(`🌐 Homepage: http://localhost:${PORT}`);
       console.log(`🎓 Student:  http://localhost:${PORT}/student`);
       console.log(`🛠️ Admin:    http://localhost:${PORT}/admin`);
+      console.log(`⚙️ Health:   http://localhost:${PORT}/health`);
     });
   })
   .catch((err) => {

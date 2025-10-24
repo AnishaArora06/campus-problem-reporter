@@ -1,9 +1,11 @@
+// src/routes/public.js
 const express = require('express');
 const Problem = require('../models/Problem');
 
 const router = express.Router();
 
-// Public: GET /api/problems - recent problems for homepage
+// Public: GET /api/public/problems - recent problems for homepage
+// NOTE: server.js mounts this router at "/api/public"
 router.get('/problems', async (req, res) => {
   try {
     const { limit = 10, category, sort = 'desc' } = req.query;
@@ -16,6 +18,7 @@ router.get('/problems', async (req, res) => {
 
     res.json({ problems });
   } catch (err) {
+    console.error('❌ Error fetching public problems:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
