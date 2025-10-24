@@ -12,7 +12,6 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
-// Ensure uploads directory exists and serve static files
 // Ensure uploads directory exists and serve static files (only locally)
 if (process.env.VERCEL !== '1') {
   const uploadsDir = path.join(__dirname, 'uploads');
@@ -22,9 +21,24 @@ if (process.env.VERCEL !== '1') {
   console.log('Running on Vercel - skipping uploads directory creation');
 }
 
+// Serve static frontend files (HTML, CSS, JS)
+const publicPath = path.join(__dirname); // 👈 assuming index.html, student.html, admin.html are in root folder
+app.use(express.static(publicPath));
 
+// Handle frontend routes (Student/Admin portals)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
 
-// Routes
+app.get('/student', (req, res) => {
+  res.sendFile(path.join(publicPath, 'student.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(publicPath, 'admin.html'));
+});
+
+// API Routes
 app.use('/api/students', require('./src/routes/student'));
 app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api', require('./src/routes/public'));
@@ -43,10 +57,10 @@ const PORT = process.env.PORT || 5000;
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error('Failed to connect to MongoDB:', err.message);
+    console.error('❌ Failed to connect to MongoDB:', err.message);
     process.exit(1);
   });
