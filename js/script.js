@@ -28,8 +28,8 @@ const API = {
     student: {
         register: (payload) => API.request('/api/students/register', { method: 'POST', body: payload }),
         login: async (payload) => { const data = await API.request('/api/students/login', { method: 'POST', body: payload }); API.studentToken = data.token; return data; },
-        submitProblem: (formData) => API.request('/api/students/problems', { method: 'POST', body: formData, token: API.studentToken }),
-        myProblems: () => API.request('/api/students/problems', { token: API.studentToken })
+        submitProblem: (formData) => API.request('/api/problems', { method: 'POST', body: formData, token: API.studentToken }),
+        myProblems: () => API.request('/api/problems')
     },
     admin: {
         login: async (payload) => { const data = await API.request('/api/admin/login', { method: 'POST', body: payload }); API.adminToken = data.token; return data; },
@@ -39,7 +39,10 @@ const API = {
         deleteProblem: (id) => API.request(`/api/admin/problems/${id}`, { method: 'DELETE', token: API.adminToken })
     },
     pub: {
-        problems: (query = 'limit=6') => API.request(`/api/problems?${query}`)
+        problems: (query = '') => API.request(`/api/problems${query ? `?${query}` : ''}`),
+        submitProblem: (payload) => API.request('/api/problems', { method: 'POST', body: payload }),
+        updateProblem: (id, updates) => API.request(`/api/problems/${id}`, { method: 'PUT', body: updates }),
+        deleteProblem: (id) => API.request(`/api/problems/${id}`, { method: 'DELETE' })
     }
 };
 
@@ -331,20 +334,16 @@ const FormManager = {
 
         // Backend first if logged-in student
         try {
-            if (API.studentToken) {
-                const fd = new FormData();
-                const backendTitle = problemData.title || `${problemData.category || 'Issue'}${problemData.location ? ' - ' + problemData.location : ''}`.trim();
-                fd.append('title', backendTitle);
-                fd.append('description', problemData.problemDescription || problemData.description || '');
-                fd.append('category', problemData.category || 'General');
-                // append images (multiple)
-                (this._selectedFiles || []).forEach(f => fd.append('images', f));
-
-                // Use XHR to report upload progress per image (approximate)
-                await this.xhrSubmit('/api/students/problems', fd, API.studentToken);
-                Utils.showNotification('Problem submitted!', 'success');
-                this.showSuccessModal({ id: Utils.generateId() });
-            } else {
+            const backendTitle = problemData.title || `${problemData.category || 'Issue'}${problemData.location ? ' - ' + problemData.location : ''}`.trim();
+            const payload = {
+                title: backendTitle,
+                description: problemData.problemDescription || problemData.description || '',
+                category: problemData.category || 'General'
+            };
+            await API.pub.submitProblem(payload);
+            Utils.showNotification('Problem submitted!', 'success');
+            this.showSuccessModal({ id: Utils.generateId() });
+        } catch (err) {
                 // Local fallback
                 problemData.id = Utils.generateId();
                 problemData.timestamp = new Date().toISOString();
@@ -788,20 +787,16 @@ const AdminDashboard = {
             }
             if (e.target.closest('.edit-problem')) {
                 const id = e.target.closest('.edit-problem').dataset.problemId;
-                if (API.adminToken) {
-                    const action = window.prompt('Type "delete" to remove, or enter new title to edit (leave blank to cancel):');
-                    if (!action) return;
-                    if (action.toLowerCase() === 'delete') {
-                        API.admin.deleteProblem(id)
-                          .then(() => { Utils.showNotification('Problem deleted', 'success'); this.loadProblems(); })
-                          .catch(err => Utils.showNotification(err.message, 'error'));
-                    } else {
-                        API.admin.editProblem(id, { title: action })
-                          .then(() => { Utils.showNotification('Problem updated', 'success'); this.loadProblems(); })
-                          .catch(err => Utils.showNotification(err.message, 'error'));
-                    }
+                const action = window.prompt('Type "delete" to remove, or enter new title to edit (leave blank to cancel):');
+                if (!action) return;
+                if (action.toLowerCase() === 'delete') {
+                    API.pub.deleteProblem(id)
+                      .then(() => { Utils.showNotification('Problem deleted', 'success'); this.loadProblems(); })
+                      .catch(err => Utils.showNotification(err.message, 'error'));
                 } else {
-                    Utils.showNotification('Admin login required', 'error');
+                    API.pub.updateProblem(id, { title: action })
+                      .then(() => { Utils.showNotification('Problem updated', 'success'); this.loadProblems(); })
+                      .catch(err => Utils.showNotification(err.message, 'error'));
                 }
             }
         });
@@ -809,19 +804,18 @@ const AdminDashboard = {
     
     async loadProblems() {
         try {
-            if (API.adminToken) {
-                const { problems } = await API.admin.problems();
-                this._problems = problems;
-                this.renderProblemsTable(problems);
-                this.updateStats(problems);
-            } else {
-                const problems = AppState.problems;
-                this._problems = problems;
-                this.renderProblemsTable(problems);
-                this.updateStats(problems);
-            }
+            // Prefer backend
+            const { problems } = await API.pub.problems();
+            this._problems = problems;
+            this.renderProblemsTable(problems);
+            this.updateStats(problems);
         } catch (err) {
-            Utils.showNotification(err.message || 'Failed to load problems', 'error');
+            // Fallback to local storage
+            const problems = AppState.problems;
+            this._problems = problems;
+            this.renderProblemsTable(problems);
+            this.updateStats(problems);
+            Utils.showNotification(err.message || 'Showing local data', 'info');
         }
     },
     
@@ -971,19 +965,9 @@ const AdminDashboard = {
     
     async updateProblemStatus(problemId, newStatus) {
         try {
-            if (API.adminToken) {
-                await API.admin.updateStatus(problemId, newStatus);
-                Utils.showNotification(`Status updated to ${newStatus}`, 'success');
-                this.loadProblems();
-            } else {
-                const problemIndex = AppState.problems.findIndex(p => (p._id||p.id) === problemId);
-                if (problemIndex !== -1) {
-                    AppState.problems[problemIndex].status = newStatus;
-                    localStorage.setItem('problems', JSON.stringify(AppState.problems));
-                    Utils.showNotification(`Problem status updated to ${newStatus}`, 'success');
-                    this.loadProblems();
-                }
-            }
+            await API.pub.updateProblem(problemId, { status: newStatus });
+            Utils.showNotification(`Status updated to ${newStatus}`, 'success');
+            this.loadProblems();
         } catch (err) {
             Utils.showNotification(err.message || 'Failed to update status', 'error');
         }

@@ -28,6 +28,7 @@ if (process.env.VERCEL !== '1') {
 app.use('/api/students', require('./src/routes/student'));
 app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api', require('./src/routes/public'));
+app.use('/api/problems', require('./src/routes/problems'));
 
 // Health check
 app.get('/health', (req, res) => {
