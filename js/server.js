@@ -7,9 +7,12 @@ const path = require('path');
 const multer = require('multer');
 const connectDB = require('./src/config/db');
 
+
 const app = express();
 
-// Middleware
+// =============================
+// 🧩 Middleware
+// =============================
 app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
@@ -17,71 +20,57 @@ app.use(morgan('dev'));
 // 📂 Ensure uploads directory exists
 // =============================
 const uploadsDir = path.join(__dirname, 'uploads');
-fs.mkdirSync(uploadsDir, { recursive: true });
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('📁 Created uploads directory');
+}
 app.use('/uploads', express.static(uploadsDir));
 
 // =============================
-// 🌐 Serve your static frontend
+// 🌐 Serve static frontend (index.html, student.html, etc.)
 // =============================
-const publicPath = path.join(__dirname);
-app.use(express.static(publicPath));
+app.use(express.static(path.join(__dirname)));
 
 // =============================
-// 🔌 Multer setup for image uploads
+// ⚙️ Multer Configuration for Image Uploads
 // =============================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
+    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+    cb(null, uniqueName);
   },
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB max
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB per file
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png/;
     const extname = allowed.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowed.test(file.mimetype);
-    if (mimetype && extname) return cb(null, true);
-    cb(new Error('Only JPG, JPEG, or PNG files allowed'));
+    if (mimetype && extname) cb(null, true);
+    else cb(new Error('Only JPG, JPEG, or PNG files are allowed'));
   },
 });
 
 // =============================
-// 🧩 API Routes
+// 🔌 API Routes
 // =============================
 app.use('/api/students', require('./src/routes/student'));
 app.use('/api/admin', require('./src/routes/admin'));
 app.use('/api', require('./src/routes/public'));
 
-// ✅ New route: handle image + report submission
+// =============================
+// 🧾 Problem Report Submission
+// =============================
 app.post('/api/problems/report', upload.array('images', 5), async (req, res) => {
-  try {
-    console.log('📩 Problem data received:', req.body);
-    console.log('🖼 Uploaded files:', req.files);
-
-    // If you want to save to MongoDB, you can later add:
-    // const Problem = require('./src/models/Problem');
-    // const problem = await Problem.create({
-    //   ...req.body,
-    //   images: req.files.map(f => `/uploads/${path.basename(f.path)}`),
-    // });
-
-    res.status(200).json({
-      message: 'Report received successfully!',
-      reportId: Date.now(),
-      files: req.files.map(f => `/uploads/${path.basename(f.path)}`)
-    });
-  } catch (err) {
-    console.error('❌ Error submitting report:', err.message);
-    res.status(500).json({ error: 'Server error while submitting report' });
-  }
 });
 
+
 // =============================
-// 🩺 Health check route
+// 🩺 Health Check
 // =============================
 app.get('/health', (req, res) => {
   const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
@@ -93,18 +82,19 @@ app.get('/health', (req, res) => {
 // 🏠 Serve homepage
 // =============================
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // =============================
-// 🚀 Start server after DB connects
+// 🚀 Start Server
 // =============================
 const PORT = process.env.PORT || 5000;
 
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log('✅ Ready to receive problem reports');
     });
   })
   .catch((err) => {

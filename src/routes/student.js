@@ -9,42 +9,47 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Multer storage for problem images (optional)
+// ===================== MULTER CONFIGURATION =====================
+const uploadDir = path.join(__dirname, '../../uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = path.join(__dirname, '../../uploads');
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const safeExt = ext && ['.jpg', '.jpeg', '.png'].includes(ext.toLowerCase()) ? ext : '.jpg';
-    cb(null, `problem_${Date.now()}_${Math.random().toString(36).slice(2,8)}${safeExt}`);
-  }
-});
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    const ok = ['image/jpeg', 'image/png'].includes(file.mimetype);
-    if (!ok) return cb(new Error('Only jpg and png allowed'));
-    cb(null, true);
+    const ext = path.extname(file.originalname).toLowerCase();
+    const validExt = ['.jpg', '.jpeg', '.png'];
+    const safeExt = validExt.includes(ext) ? ext : '.jpg';
+    cb(null, `problem_${Date.now()}_${Math.random().toString(36).slice(2, 8)}${safeExt}`);
   },
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
-// Helper: sign JWT
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png'];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error('Only JPG and PNG images are allowed'));
+    }
+    cb(null, true);
+  },
+});
+
+// ===================== JWT HELPER =====================
 function signToken(id, role) {
   const secret = process.env.JWT_SECRET || 'devsecret';
   return jwt.sign({ id, role }, secret, { expiresIn: '7d' });
 }
 
-// Basic field validation
+// ===================== HELPER FUNCTION =====================
 function requireFields(obj, fields) {
   const missing = fields.filter((f) => !obj[f] || String(obj[f]).trim() === '');
   return missing;
 }
 
-// POST /api/students/register
+// ===================== REGISTER =====================
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body || {};
@@ -58,11 +63,12 @@ router.post('/register', async (req, res) => {
     const token = signToken(student._id, 'student');
     res.status(201).json({ token, student: { id: student._id, name: student.name, email: student.email } });
   } catch (err) {
+    console.error('Register Error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// POST /api/students/login
+// ===================== LOGIN =====================
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body || {};
@@ -78,48 +84,61 @@ router.post('/login', async (req, res) => {
     const token = signToken(student._id, 'student');
     res.json({ token, student: { id: student._id, name: student.name, email: student.email } });
   } catch (err) {
+    console.error('Login Error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// POST /api/students/problems (auth: student)
-// Accepts multiple files via field name "images" (array) and legacy single "image"
-router.post('/problems', auth('student'), upload.any(), async (req, res) => {
+// ===================== SUBMIT PROBLEM (MAIN FIX) =====================
+// Frontend FormData field name: 'images' or 'imageUpload'
+router.post('/report', upload.array('images', 5), async (req, res) => {
   try {
-    const { title, description, category, imageUrl } = req.body || {};
-    const missing = requireFields({ title, description, category }, ['title', 'description', 'category']);
-    if (missing.length) return res.status(400).json({ error: `Missing: ${missing.join(', ')}` });
+    const {
+      studentName,
+      rollNumber,
+      department,
+      category,
+      location,
+      problemDescription,
+      priority,
+    } = req.body || {};
 
-    const uploadedImages = [];
-    if (Array.isArray(req.files)) {
-      const files = req.files.filter(f => f.fieldname === 'images' || f.fieldname === 'image');
-      for (const f of files) {
-        uploadedImages.push(`/uploads/${f.filename}`);
-      }
+    const missing = requireFields(
+      { studentName, rollNumber, department, category, location, problemDescription, priority },
+      ['studentName', 'rollNumber', 'department', 'category', 'location', 'problemDescription', 'priority']
+    );
+    if (missing.length) {
+      return res.status(400).json({ message: `Missing fields: ${missing.join(', ')}` });
     }
 
-    let primary = imageUrl;
-    if (uploadedImages.length > 0) primary = uploadedImages[0];
+    const imagePaths = req.files.map((file) => `/uploads/${file.filename}`);
 
-    const problem = await Problem.create({
-      title,
-      description,
+    const newProblem = await Problem.create({
+      studentName,
+      rollNumber,
+      department,
       category,
-      imageUrl: primary,
-      images: uploadedImages,
-      reporter: req.user.id,
+      location,
+      problemDescription,
+      priority,
+      images: imagePaths,
+      status: 'Pending',
     });
 
-    res.status(201).json({ problem });
+    res.status(201).json({
+      message: 'Problem submitted successfully!',
+      problem: newProblem,
+    });
   } catch (err) {
-    res.status(400).json({ error: err.message || 'Server error' });
+    console.error('Error submitting problem:', err.message);
+    res.status(500).json({ message: 'Failed to submit problem' });
   }
 });
 
-// GET /api/students/problems (auth: student)
-router.get('/problems', auth('student'), async (req, res) => {
+// ===================== GET STUDENT PROBLEMS =====================
+router.get('/problems', async (req, res) => {
   try {
-    const problems = await Problem.find({ reporter: req.user.id }).sort({ createdAt: -1 });
+    const problems = await Problem.find().sort({ createdAt: -1 });
     res.json({ problems });
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
